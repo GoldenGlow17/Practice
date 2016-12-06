@@ -1,0 +1,62 @@
+// P219_14.cpp : Defines the entry point for the console application.
+//
+#include "stdafx.h"
+#include<stdio.h>
+int main(int argc, char* argv[])
+{
+	int i,j,ls=0,lp=0,all;       //ls=成绩最好的学生  lp=成绩最好的课程
+	float score[10][5],ave[10],a1=0,a2=0,a3=0,a4=0,a5=0,lar=0,fc=0,a=0;
+	printf("Please input 10 student's scores,acording to A B C D E:\n");
+	for(i=0;i<10;i++)
+	{
+		printf("NO.%d:\n",i+1);
+		for(j=0;j<5;j++)
+		{
+			scanf("%f",&score[i][j]);
+			if(lar<score[i][j])
+			{
+				lar=score[i][j];
+				ls=i+1;
+				lp=j+1;
+			}
+			a=a+score[i][j];
+		}
+		ave[i]=(score[i][0]+score[i][1]+score[i][2]+score[i][3]+score[i][4])/5;
+		a1=a1+score[i][0];
+		a2=a2+score[i][1];
+		a3=a3+score[i][2];
+		a4=a4+score[i][3];
+		a5=a5+score[i][4];
+	}
+	all=a/50;
+	for(i=0;i<10;++i){
+		for(j=0;j<5;++j){
+			fc=fc+(score[i][j]-all)*(score[i][j]-all);}
+
+	}
+	fc=fc/50;                  //求方差
+	a1=a1/10;
+	a2=a2/10;
+	a3=a3/10;
+	a4=a4/10;
+	a5=a5/10;
+	printf("50 students' scores：\n");
+	printf("Student Number    A      B      C      D      E\n");
+	for(i=0;i<10;++i){
+		printf("%12d  ",i);
+		for(j=0;j<5;++j){
+			printf("%2.2f  ",score[i][j]);
+		}
+		printf("\n");
+	}                         //将所有成绩打出来
+	for(i=0;i!=10;++i)
+		printf("NO.%d student's average score is:%0.2f\n",i+1,ave[i]);
+	printf("First project's average is:%-0.2f\n",a1);
+	printf("Second project's average is:%-0.2f\n",a2);
+	printf("Third project's average is:%-0.2f\n",a3);
+	printf("Forth project's average is:%-0.2f\n",a4);
+	printf("Fifth project's average is:%-0.2f\n",a5);
+	printf("The higest score of 50 students' scores is No.%d,and the project is the %d,the score is:%0.2f\n",ls,lp,lar);
+	printf("平均分方差为：%0.2f\n",fc);
+	return 0;
+}
