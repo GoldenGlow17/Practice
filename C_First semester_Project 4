@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#define N 10        //评委预计人数（可更改）
+#define M 2         //歌手预计人数（可更改）
+
+struct Singer
+{
+	int number;
+	char name[20];
+	int score[N];
+	int average;
+	int scoreAll[N];
+};
+
+int main(int argc, char* argv[])
+{
+	char choose;
+	int flag=1;
+	void print_star();
+	void print_message();
+	void print_menu();
+	void inputSingerInformation(struct Singer sin[]);
+	void inputSingerScore(struct Singer sin[]);
+	void caculate(struct Singer sin[]);
+	struct Singer sin[M],*p=sin;
+	
+	print_star();print_message();print_star();print_menu();
+	
+	do
+	{
+		printf("Please choose a function:\n");
+		scanf("%c",&choose);
+		switch(choose)
+		{
+		case '1': inputSingerInformation(p);break;
+		case '2': inputSingerScore(p);break;
+		case '3': caculate(p);break;
+		case '4': return 0;break;
+		default:flag=0;
+		}
+	}while(1);
+	return 0;
+}
+
+void print_star()
+{printf("***************************************************\n");}
+void print_message()
+{printf("     Welcome to use singer competition system!\n");}
+void print_menu()
+{
+	printf(" Please choose some functions(Just input a number):\n");
+	printf(" * 1:Input singers' informations\n");
+	printf(" * 2:Input singers' scores\n");
+	printf(" * 3:Scores' sequence\n");
+	printf(" * 4:Exit\n");
+}
+void inputSingerInformation(struct Singer sin[])
+{
+	int i;
+	printf("Please input singers' numbers and names:\n");
+	for(i=0;i<M;i++)
+	{
+		scanf("%d %s",&sin[i].number,sin[i].name);
+	}
+}
+void inputSingerScore(struct Singer sin[])
+{
+	int i,j;
+	printf("Please input singers' scores:\n");
+	for(i=0;i<M;i++)
+	{
+		printf("Please input No.%d singers' scores:\n",sin[i].number);//提示输入歌手成绩
+		for(j=0;j<N;j++)
+			scanf("%d",&sin[i].score[j]);                             //输入十个评委的成绩
+	}
+}
+void caculate(struct Singer sin[])
+{
+	int i,m,n,t,ave,num,scoreAll[M];
+	char nam[20];
+	for(i=0;i<M;i++)
+	{
+			scoreAll[i]=sin[i].score[0]+sin[i].score[1]+sin[i].score[2]+sin[i].score[3]
+		            +sin[i].score[4]+sin[i].score[5]+sin[i].score[6]+sin[i].score[7]
+					+sin[i].score[8]+sin[i].score[9];
+	}
+	for(i=0;i<M;i++)
+	{
+		for(m=0;m<M;m++)
+			for(n=0;n<M-m;n++)
+			{t=sin[i].score[n];sin[i].score[n]=sin[i+1].score[n];sin[i+1].score[n]=t;
+		}  //用起泡法将十位评委所打的成绩从小到大排序
+		sin[i].average=(scoreAll[i]-sin[i].score[0]-sin[i].score[9])/8;  //用总分减去最高分与最低分算平均分
+		printf("No.%d Singer %s total score is:%d\n",sin[i].number,sin[i].name,scoreAll[i]);
+	}	
+	for(m=0;m<M;m++){
+		for(n=0;n<M-m;n++)
+		if(sin[n].average>sin[n+1].average)                              //比较平均分的大小，将所有的信息按照平均分的排序依次对照
+		{
+			ave=sin[n].average;sin[n].average=sin[n+1].average;sin[n+1].average=ave;
+			strcpy(nam,sin[n].name);strcpy(sin[n].name,sin[n+1].name);strcpy(sin[n+1].name,nam);
+			num=sin[n].number;sin[n].number=sin[n+1].number;sin[n+1].number=num;
+		}
+	}
+	printf("The sort is:\n");
+		for(i=(M-1);i>=0;i--) printf("%d    %s    %d\n",sin[i].number,sin[i].name,sin[i].average);
+}
